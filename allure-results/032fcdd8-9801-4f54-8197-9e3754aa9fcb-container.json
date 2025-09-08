@@ -1,0 +1,1 @@
+{"uuid":"032fcdd8-9801-4f54-8197-9e3754aa9fcb","name":"RestfulBookingAPITests","children":["fdb7fb0e-b721-4ef6-962d-fb0c4822d098"],"befores":[{"name":"setup","status":"passed","stage":"finished","description":"","steps":[],"attachments":[],"parameters":[],"start":1757277683015,"stop":1757277683771}],"afters":[],"start":1757277683014,"stop":1757277685233}

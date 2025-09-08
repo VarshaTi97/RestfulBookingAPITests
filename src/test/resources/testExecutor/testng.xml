@@ -1,0 +1,15 @@
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+<suite name="BookingAPISuite" parallel="classes" thread-count="4">
+    <listeners>
+        <listener class-name="io.qameta.allure.testng.AllureTestNg"/>
+    </listeners>
+
+    <test name="BookingTests">
+        <classes>
+            <class name="booking.GetBookingAPITests"/>
+            <class name="booking.UpdateBookingsTests"/>
+            <class name="booking.DeleteBookingTests"/>
+            <class name="integration.BookingE2ETests"/>
+        </classes>
+    </test>
+</suite>
