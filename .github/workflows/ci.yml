@@ -1,6 +1,5 @@
 name: CI - RestfulBookingAPITests
 
-# Trigger on push/PR to main or manual run
 on:
   push:
     branches: ["main"]
@@ -8,7 +7,6 @@ on:
     branches: ["main"]
   workflow_dispatch:
 
-# Permissions needed to push to gh-pages
 permissions:
   contents: write
 
@@ -17,36 +15,25 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # 1️⃣ Checkout the repo
       - name: Checkout code
         uses: actions/checkout@v4
 
-      # 3️⃣ Build Docker image
       - name: Build Docker image
         run: docker build -t restful-booking-tests .
 
-      # 4️⃣ Run tests inside Docker
       - name: Run tests in Docker
         run: docker run --rm restful-booking-tests
 
-      # 5️⃣ Copy Allure results from container
-      - name: Copy Allure results
+      - name: Copy Allure HTML report
         run: |
-          mkdir -p allure-results
-          docker cp $(docker ps -alq):/app/target/allure-results ./allure-results || true
+          mkdir -p allure-report
+          docker cp $(docker ps -alq):/app/target/allure-report ./allure-report || true
 
-      # 6️⃣ Generate Allure report and preserve history
-      - name: Generate Allure Report
-        uses: simple-elf/allure-report-action@v1.7
-        with:
-          allure_results: allure-results
-          allure_report: allure-report
-          allure_history: allure-history
-          keep_reports: 20
-
-      # 7️⃣ Deploy Allure report to GitHub Pages
       - name: Deploy Allure Report to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./allure-report
+
+      - name: Show Allure report URL
+        run: echo "https://varshati97.github.io/RestfulBookingAPITests/" >> $GITHUB_STEP_SUMMARY
