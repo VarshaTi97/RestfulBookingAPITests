@@ -1,5 +1,5 @@
 # Base image with Java and Maven
-FROM maven:3.9.3-eclipse-temurin-23
+FROM eclipse-temurin:24-jdk
 
 # Set working directory
 WORKDIR /app
