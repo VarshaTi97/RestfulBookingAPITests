@@ -24,6 +24,7 @@
                     <suiteXmlFiles>
                         <suiteXmlFile>src/test/resources/testExecutor/testng.xml</suiteXmlFile>
                     </suiteXmlFiles>
+                    <testFailureIgnore>false</testFailureIgnore>
                 </configuration>
             </plugin>
             <plugin>

@@ -43,8 +43,10 @@ jobs:
       - name: Copy Allure results
         run: docker cp $(docker ps -alq):/app/target/allure-results ./allure-results || true
 
-      - name: Upload allure-results as artifact
-        uses: actions/upload-artifact@v4
+      - name: Generate Allure Report
+        uses: simple-elf/allure-report-action@v1.7
         with:
-          name: allure-results
-          path: allure-results
+          allure_results: allure-results
+          allure_report: allure-report
+          allure_history: allure-history
+          github_token: ${{ secrets.GITHUB_TOKEN }}
