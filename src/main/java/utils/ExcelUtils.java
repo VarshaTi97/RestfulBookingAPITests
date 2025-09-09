@@ -2,15 +2,13 @@ package utils;
 
 import constants.ExcelConstants;
 import exceptions.ExcelExceptions;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import pojoModels.BookingDates;
 import pojoModels.BookingDetails;
 
 import java.io.*;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class ExcelUtils {
@@ -66,17 +64,22 @@ public class ExcelUtils {
         return data;
     }
 
-    public Object getCellValue(Cell cell){
+    public Object getCellValue(Cell cell) {
         switch (cell.getCellType()) {
             case STRING:
                 return cell.getStringCellValue();
             case NUMERIC:
-                double numericValue = cell.getNumericCellValue();
-                // Check if the numeric value is an integer (i.e., no decimal part)
-                if (numericValue == (int) numericValue) {
-                    return (int) numericValue;  // Convert to integer if it has no decimal
+                if (DateUtil.isCellDateFormatted(cell)) {
+                    // Format Excel date as yyyy-MM-dd
+                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                    return sdf.format(cell.getDateCellValue());
                 } else {
-                    return numericValue;  // Return as double if it has decimals
+                    double numericValue = cell.getNumericCellValue();
+                    if (numericValue == (int) numericValue) {
+                        return (int) numericValue;
+                    } else {
+                        return numericValue;
+                    }
                 }
             case BOOLEAN:
                 return cell.getBooleanCellValue();

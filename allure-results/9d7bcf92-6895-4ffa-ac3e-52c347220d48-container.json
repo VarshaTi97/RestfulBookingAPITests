@@ -1,1 +1,0 @@
-{"uuid":"9d7bcf92-6895-4ffa-ac3e-52c347220d48","name":"Default Suite","children":["2d4560f0-936a-4a34-b1ce-4951b530b658"],"befores":[{"name":"checkAPIStatus","status":"passed","stage":"finished","description":"","steps":[],"attachments":[],"parameters":[],"start":1757272034430,"stop":1757272035689}],"afters":[],"start":1757272034420,"stop":1757272051592}

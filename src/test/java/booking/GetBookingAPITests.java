@@ -35,11 +35,15 @@ public class GetBookingAPITests extends BaseTest{
         Response createUserResponse = bookingAPI.createBooking(bookingDetails);
         Assert.assertEquals(createUserResponse.getStatusCode(), APIConstants.HTTP_SUCCESS);
         int bookingId = createUserResponse.jsonPath().getInt("bookingid");
+        Map<String, Object> bookingDatesMap = Map.of(
+                "checkin", bookingDetails.getBookingdates().getCheckin(),
+                "checkout", bookingDetails.getBookingdates().getCheckout()
+        );
+
         Map<String, Object> fieldsToBeFiltered = Map.of(
                 "firstname", bookingDetails.getFirstname(),
-                "lastname", bookingDetails.getLastname()
-//                "checkin", bookingDetails.getBookingdates().getCheckin(),
-//                "checkout",bookingDetails.getBookingdates().getCheckout()
+                "lastname", bookingDetails.getLastname(),
+                "bookingdates", bookingDatesMap
         );
 
         for(Map.Entry<String, Object> filter : fieldsToBeFiltered.entrySet()){
@@ -54,7 +58,6 @@ public class GetBookingAPITests extends BaseTest{
         }
     }
 
-    //check dates issue
     @Test(description = "Get booking details by multiple attribute filter", dataProvider = "excelBookingDetailsData")
     public void checkBookingByMultipleFields(BookingDetails bookingDetails) {
 
@@ -63,11 +66,15 @@ public class GetBookingAPITests extends BaseTest{
         Assert.assertEquals(createUserResponse.getStatusCode(), APIConstants.HTTP_SUCCESS);
         int bookingId = createUserResponse.jsonPath().getInt("bookingid");
 
+        Map<String, Object> bookingDatesMap = Map.of(
+                "checkin", bookingDetails.getBookingdates().getCheckin(),
+                "checkout", bookingDetails.getBookingdates().getCheckout()
+        );
+
         Map<String, Object> fieldsToBeFiltered = Map.of(
                 "firstname", bookingDetails.getFirstname(),
-                "lastname", bookingDetails.getLastname()
-//                "checkin", bookingDetails.getBookingdates().getCheckin(),
-//                "checkout",bookingDetails.getBookingdates().getCheckout()
+                "lastname", bookingDetails.getLastname(),
+                "bookingdates", bookingDatesMap
         );
 
 
@@ -75,6 +82,8 @@ public class GetBookingAPITests extends BaseTest{
 
             Assert.assertEquals(filterResponse.getStatusCode(), APIConstants.HTTP_SUCCESS);
 
+        System.out.println("Filter request: " + fieldsToBeFiltered);
+        System.out.println("API response: " + filterResponse.asString());
 
         List<Integer> bookingIdsList = filterResponse.jsonPath().getList("bookingid", Integer.class);
 
@@ -93,7 +102,7 @@ public class GetBookingAPITests extends BaseTest{
         Assert.assertEquals(response.getBody().asString(), "Internal Server Error");
     }
 
-    @Ignore()
+    @Ignore("API currently ignores unknown fields instead of returning error")
     @Test(description = "validate filter with incorrect parameter")
     public void checkInvalidParameterFilter(){
         Map<String, Object> invalidParam = Map.of(
@@ -106,17 +115,8 @@ public class GetBookingAPITests extends BaseTest{
 
     @Test(description = "Verify response structure and data type")
     public void checkResponseStructure(){
-        Response response = bookingAPI.getAllBookingByIds();
-        Assert.assertEquals(response.statusCode(), APIConstants.HTTP_SUCCESS);
-
-        List<Integer> bookingIds = response.jsonPath().getList("bookingid", Integer.class);
-        Assert.assertFalse(bookingIds.isEmpty(), "Booking list should not be empty");
-
-        //select random id
-        int randomId = bookingIds.get(new Random().nextInt(bookingIds.size()));
-
-        //check response of the random booking id
-        Response bookingResp = bookingAPI.getBookingById(randomId);
+        //check response of the created booking id
+        Response bookingResp = bookingAPI.getBookingById(createdBookingId);
         Assert.assertEquals(bookingResp.getStatusCode(), APIConstants.HTTP_SUCCESS);
 
         //Validate structure and data type

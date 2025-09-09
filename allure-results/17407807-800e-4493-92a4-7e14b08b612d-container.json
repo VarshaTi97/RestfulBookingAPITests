@@ -1,1 +1,0 @@
-{"uuid":"17407807-800e-4493-92a4-7e14b08b612d","name":"booking.GetBookingAPITests","children":["7b39092b-b292-4caa-8b37-e5132310ee9b"],"befores":[{"name":"getToken","status":"passed","stage":"finished","description":"","steps":[],"attachments":[],"parameters":[],"start":1757275979951,"stop":1757275980680}],"afters":[],"start":1757275979940,"stop":1757275981338}

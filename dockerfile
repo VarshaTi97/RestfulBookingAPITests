@@ -7,7 +7,6 @@ WORKDIR /app
 # Copy project files
 COPY pom.xml .
 COPY src ./src
-COPY src/test/resources/testExecutor/testng.xml ./testng.xml
 
 
 # Install Allure
@@ -21,4 +20,4 @@ RUN rm -rf target/allure-results target/allure-report
 
 RUN mvn clean install -DskipTests
 
-CMD ["sh", "-c", "mvn test -Dsurefire.suiteXmlFiles=testng.xml && allure generate target/allure-results --clean -o target/allure-report"]
+CMD ["sh", "-c", "mvn test -Dsurefire.suiteXmlFiles=src/test/resources/testExecutor/testng.xml && allure generate target/allure-results --clean -o target/allure-report"]
