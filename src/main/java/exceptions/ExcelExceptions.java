@@ -23,24 +23,4 @@ public class ExcelExceptions {
         }
     }
 
-    // Exception for invalid data
-    public static class DataValidationException extends ExcelOperationException {
-        public DataValidationException(String message) {
-            super(message);
-        }
-    }
-
-    //Exception for missing columns
-    public static class ColumnNotFoundException extends ExcelOperationException {
-        public ColumnNotFoundException(String message) {
-            super(message);
-        }
-    }
-
-    // Exception for missing users
-    public static class UserNotFoundException extends ExcelOperationException {
-        public UserNotFoundException(String message) {
-            super(message);
-        }
-    }
 }

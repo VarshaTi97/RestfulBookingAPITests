@@ -17,6 +17,7 @@ RUN apt-get update && apt-get install -y unzip curl \
     && ln -s /opt/allure-2.21.0/bin/allure /usr/bin/allure \
     && rm /tmp/allure.zip
 
+RUN rm -rf target/allure-results target/allure-report
 
 RUN mvn clean install -DskipTests
 
