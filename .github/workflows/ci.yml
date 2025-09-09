@@ -1,39 +1,32 @@
-name: CI - RestfulBookingAPITests
+name: Restful Booking API Tests
 
 on:
   push:
-    branches: ["main"]
+    branches:
+      - main
   pull_request:
-    branches: ["main"]
-  workflow_dispatch:
-
-permissions:
-  contents: write
+    branches:
+      - main
 
 jobs:
-  build-test:
+  test:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
 
       - name: Build Docker image
         run: docker build -t restful-booking-tests .
 
-      - name: Run tests in Docker
+      - name: Run tests inside Docker
         run: docker run --rm restful-booking-tests
 
-      - name: Copy Allure HTML report
-        run: |
-          mkdir -p allure-report
-          docker cp $(docker ps -alq):/app/target/allure-report ./allure-report || true
-
-      - name: Deploy Allure Report to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v3
+      - name: Upload Allure report
+        uses: actions/upload-artifact@v3
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./allure-report
-
-      - name: Show Allure report URL
-        run: echo "https://varshati97.github.io/RestfulBookingAPITests/" >> $GITHUB_STEP_SUMMARY
+          name: allure-report
+          path: target/allure-report
