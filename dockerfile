@@ -16,8 +16,6 @@ RUN apt-get update && apt-get install -y unzip curl \
     && ln -s /opt/allure-2.21.0/bin/allure /usr/bin/allure \
     && rm /tmp/allure.zip
 
-RUN rm -rf target/allure-results target/allure-report
-
 RUN mvn clean install -DskipTests
 
 CMD ["sh", "-c", "mvn test -Dsurefire.suiteXmlFiles=src/test/resources/testExecutor/testng.xml && allure generate target/allure-results --clean -o target/allure-report"]
