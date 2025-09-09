@@ -1,54 +1,50 @@
 name: CI - RestfulBookingAPITests
 
+# Trigger on push/PR to main or manual run
 on:
   push:
-    branches: [ "main" ]
+    branches: ["main"]
   pull_request:
-    branches: [ "main" ]
-  workflow_dispatch:   # allow manual trigger
+    branches: ["main"]
+  workflow_dispatch:
+
+# Permissions needed to push to gh-pages
+permissions:
+  contents: write
 
 jobs:
   build-test:
     runs-on: ubuntu-latest
 
     steps:
-      # Checkout the repo
+      # 1️⃣ Checkout the repo
       - name: Checkout code
         uses: actions/checkout@v4
 
-      # Set up JDK
-      - name: Set up JDK 21
-        uses: actions/setup-java@v4
-        with:
-          distribution: temurin
-          java-version: 21
-
-      # Cache Maven dependencies
-      - name: Cache Maven packages
-        uses: actions/cache@v3
-        with:
-          path: ~/.m2
-          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
-          restore-keys: |
-            ${{ runner.os }}-maven-
-
-      # Build & run tests inside Docker
+      # 3️⃣ Build Docker image
       - name: Build Docker image
         run: docker build -t restful-booking-tests .
 
+      # 4️⃣ Run tests inside Docker
       - name: Run tests in Docker
         run: docker run --rm restful-booking-tests
 
-      # Upload Allure results (from Docker container)
+      # 5️⃣ Copy Allure results from container
       - name: Copy Allure results
-        run: docker cp $(docker ps -alq):/app/target/allure-results ./allure-results || true
+        run: |
+          mkdir -p allure-results
+          docker cp $(docker ps -alq):/app/target/allure-results ./allure-results || true
 
-      - name: Upload allure-results as artifact
-        uses: actions/upload-artifact@v4
+      # 6️⃣ Generate Allure report and preserve history
+      - name: Generate Allure Report
+        uses: simple-elf/allure-report-action@v1.7
         with:
-          name: allure-results
-          path: allure-results
+          allure_results: allure-results
+          allure_report: allure-report
+          allure_history: allure-history
+          keep_reports: 20
 
+      # 7️⃣ Deploy Allure report to GitHub Pages
       - name: Deploy Allure Report to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
