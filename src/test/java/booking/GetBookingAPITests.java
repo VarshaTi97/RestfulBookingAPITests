@@ -1,40 +1,39 @@
 package booking;
 
 import constants.APIConstants;
-import constants.ExcelConstants;
 import io.restassured.response.Response;
 import org.testng.Assert;
-import org.testng.annotations.DataProvider;
 import org.testng.annotations.Ignore;
 import org.testng.annotations.Test;
-import pages.BookingAPI;
-import pojoModels.BookingDates;
 import pojoModels.BookingDetails;
 import pojoModels.GetBookingIds;
-import utils.ExcelUtils;
-
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 
 public class GetBookingAPITests extends BaseTest{
+
     @Test(description = "Get list of all the booking ids and check list is not empty")
     public void getAllBookingIds() {
+        //get list of all existing booking ids
         Response response = bookingAPI.getAllBookingByIds();
         Assert.assertEquals(response.getStatusCode(), APIConstants.HTTP_SUCCESS);
+        //check that list of bookings is not empty
         List<GetBookingIds> bookingIdsList = response.jsonPath().getList("", GetBookingIds.class);
         Assert.assertFalse(bookingIdsList.isEmpty());
     }
 
-//check dates issue
+
     @Test(description = "Get booking details by single attribute filter", dataProvider = "excelBookingDetailsData")
     public void checkBookingBySingleField(BookingDetails bookingDetails) {
 
-        //Create new booking
+        //Create 3 new bookings with data coming from excel sheet
         Response createUserResponse = bookingAPI.createBooking(bookingDetails);
         Assert.assertEquals(createUserResponse.getStatusCode(), APIConstants.HTTP_SUCCESS);
+
+        //Save the booking id
         int bookingId = createUserResponse.jsonPath().getInt("bookingid");
+
+        //Prepare the list of the booking request attributes which needs to be filtered
         Map<String, Object> bookingDatesMap = Map.of(
                 "checkin", bookingDetails.getBookingdates().getCheckin(),
                 "checkout", bookingDetails.getBookingdates().getCheckout()
@@ -46,13 +45,16 @@ public class GetBookingAPITests extends BaseTest{
                 "bookingdates", bookingDatesMap
         );
 
+        //Navigate over each attribute from the above map and pass it as query param and then validate the booking id returned as response
         for(Map.Entry<String, Object> filter : fieldsToBeFiltered.entrySet()){
+
+            //filter with query param
             Map<String, Object> singleFieldFilterQueryParam = Map.of(filter.getKey(), filter.getValue());
             Response filterResponse = bookingAPI.getBookingByFilter(singleFieldFilterQueryParam);
             Assert.assertEquals(filterResponse.getStatusCode(), APIConstants.HTTP_SUCCESS);
 
             List<Integer> bookingIdsList = filterResponse.jsonPath().getList("bookingid", Integer.class);
-
+            //Validate booking list not empty and contains the ID created in this test
             Assert.assertFalse(bookingIdsList.isEmpty());
             Assert.assertTrue(bookingIdsList.contains(bookingId), "Booking id appears in the "+filter.getKey()+" filter list");
         }
@@ -61,11 +63,14 @@ public class GetBookingAPITests extends BaseTest{
     @Test(description = "Get booking details by multiple attribute filter", dataProvider = "excelBookingDetailsData")
     public void checkBookingByMultipleFields(BookingDetails bookingDetails) {
 
-        //Create new booking
+        //Create 3 new bookings with data coming from excel sheet
         Response createUserResponse = bookingAPI.createBooking(bookingDetails);
         Assert.assertEquals(createUserResponse.getStatusCode(), APIConstants.HTTP_SUCCESS);
+
+        //Save the booking id
         int bookingId = createUserResponse.jsonPath().getInt("bookingid");
 
+        //Prepare the list of the booking request attributes which needs to be filtered
         Map<String, Object> bookingDatesMap = Map.of(
                 "checkin", bookingDetails.getBookingdates().getCheckin(),
                 "checkout", bookingDetails.getBookingdates().getCheckout()
@@ -77,20 +82,18 @@ public class GetBookingAPITests extends BaseTest{
                 "bookingdates", bookingDatesMap
         );
 
-
+            //filter the requests based on query params
             Response filterResponse = bookingAPI.getBookingByFilter(fieldsToBeFiltered);
 
             Assert.assertEquals(filterResponse.getStatusCode(), APIConstants.HTTP_SUCCESS);
 
-        System.out.println("Filter request: " + fieldsToBeFiltered);
-        System.out.println("API response: " + filterResponse.asString());
-
         List<Integer> bookingIdsList = filterResponse.jsonPath().getList("bookingid", Integer.class);
 
-
+            //Validate booking list not empty and contains the ID created in this test
             Assert.assertFalse(bookingIdsList.isEmpty());
             Assert.assertTrue(bookingIdsList.contains(bookingId), "Booking id appears in the filtered list");
         }
+
 
     @Test(description = "Validate filter with incorrect date format")
     public void checkInvalidDateFilter(){
@@ -115,7 +118,7 @@ public class GetBookingAPITests extends BaseTest{
 
     @Test(description = "Verify response structure and data type")
     public void checkResponseStructure(){
-        //check response of the created booking id
+        //check response of the created booking id for test
         Response bookingResp = bookingAPI.getBookingById(createdBookingId);
         Assert.assertEquals(bookingResp.getStatusCode(), APIConstants.HTTP_SUCCESS);
 

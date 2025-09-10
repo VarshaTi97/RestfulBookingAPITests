@@ -16,8 +16,8 @@ public class APIUtils {
     public static RequestSpecification getRequestSpec() {
         return given()
                 .baseUri(APIConstants.BASE_URL)
-                .header("Content-Type", "application/json")
-                .header("Accept", "application/json");
+                .header("Content-Type", APIConstants.CONTENT_TYPE)
+                .header("Accept", APIConstants.ACCEPT);
     }
 
     //request specification with token
@@ -61,6 +61,7 @@ public class APIUtils {
                 .response();
     }
 
+    //generic post method
     public static Response post(String endpoint, RequestSpecification requestSpecification, Object body){
         return given(requestSpecification)
                 .body(body)
@@ -71,6 +72,7 @@ public class APIUtils {
                 .response();
     }
 
+    //generic patch method
     public static Response patch(String endpoint, RequestSpecification requestSpecification, Object body){
         return given(requestSpecification)
                 .body(body)
@@ -81,6 +83,7 @@ public class APIUtils {
                 .response();
     }
 
+    //generic delete method
     public static Response delete(String endpoint, RequestSpecification requestSpecification){
         return given(requestSpecification)
                 .when()

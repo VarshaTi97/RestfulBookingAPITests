@@ -14,6 +14,7 @@ import utils.AuthenticationTokenUtil;
 public class BaseE2Etest {
     protected BookingAPI bookingAPI;
     protected String token;
+
     @BeforeSuite(alwaysRun = true)
     public void checkAPIStatus(){
         Response response = APIUtils.get(APIConstants.PING, APIUtils.getRequestSpec());

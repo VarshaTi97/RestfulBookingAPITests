@@ -16,10 +16,12 @@ public class UpdateBookingsTests extends BaseTest {
         Map<String, Object> updates = new HashMap<>();
         updates.put("firstname", "John");
 
+        //Updating firstname of the test booking created by createBooking() in baseTest
         Response response = bookingAPI.partialUpdateBooking(createdBookingId, updates);
 
         Assert.assertEquals(response.getStatusCode(), APIConstants.HTTP_SUCCESS, "PATCH failed");
 
+        //Validating the first name
         String updatedFirstName = response.jsonPath().getString("firstname");
         Assert.assertEquals(updatedFirstName, "John", "Firstname not updated");
     }
@@ -29,10 +31,12 @@ public class UpdateBookingsTests extends BaseTest {
         Map<String, Object> updates = new HashMap<>();
         updates.put("lastname", "Smith");
 
+        //Updating lastname of the test booking created in baseTest
         Response response = bookingAPI.partialUpdateBooking(createdBookingId, updates);
 
         Assert.assertEquals(response.getStatusCode(), APIConstants.HTTP_SUCCESS, "PATCH failed");
 
+        //Validating the last name
         String updatedLastName = response.jsonPath().getString("lastname");
         Assert.assertEquals(updatedLastName, "Smith", "Lastname not updated");
     }
@@ -43,18 +47,23 @@ public class UpdateBookingsTests extends BaseTest {
         updates.put("additionalneeds", "coffee machine");
         updates.put("totalprice", 299);
 
+        //updated multiple attributes
         Response response = bookingAPI.partialUpdateBooking(createdBookingId, updates);
 
         Assert.assertEquals(response.getStatusCode(), APIConstants.HTTP_SUCCESS, "PATCH failed");
 
+        //get multiple attributes from the response
         String updatedAdditionalNeeds = response.jsonPath().getString("additionalneeds");
         String updatedTotalPrice = response.jsonPath().getString("totalprice");
+
+        //Validate the updated values
         Assert.assertEquals(updatedAdditionalNeeds, "coffee machine", "Additional needs not updated");
         Assert.assertEquals(updatedTotalPrice, "299", "Total price not updated");
     }
 
     @Test(description = "Update checkin and checkout date and validate other fields remain unchanged")
     public void updateCheckinAndCheckoutDateAndCheckOtherFieldsUnchangedForExistingBooking() {
+        //Updated dates to be used in the patch field
         Map<String, Object> updates = new HashMap<>();
         Map<String, String> bookingDates = new HashMap<>();
         bookingDates.put("checkin", "2026-09-02");
@@ -79,37 +88,43 @@ public class UpdateBookingsTests extends BaseTest {
 
     @Test(description = "Update non-existing booking id")
     public void updateNonExistingBookingId() {
+
+        //Patch test data
         Map<String, Object> updates = new HashMap<>();
         Map<String, String> bookingDates = new HashMap<>();
         bookingDates.put("checkin", "2026-10-01");
         bookingDates.put("checkout", "2026-10-05");
         updates.put("bookingdates", bookingDates);
+
+        //Try to update non-existent booking ids
         Response response = bookingAPI.partialUpdateBooking(999999, updates);
         Assert.assertEquals(response.getStatusCode(), 405, "Expected 405 for invalid booking ID");
     }
 
     @Test(description = "Update existing booking id with invalid token")
     public void checkPatchWithIncorrectTokenForExistingBookingId(){
+        //Patch test data
         Map<String, Object> updates = new HashMap<>();
         Map<String, String> bookingDates = new HashMap<>();
         bookingDates.put("checkin", "2026-10-01");
         bookingDates.put("checkout", "2026-10-05");
         updates.put("bookingdates", bookingDates);
 
+        //Test patch with invalid token passed in parameter
         Response response = bookingAPI.partialUpdateBooking(createdBookingId, updates, null);
         Assert.assertEquals(response.getStatusCode(), APIConstants.HTTP_UNAUTHORIZED, "Expected 403 for invalid token");
     }
 
     @Test(description = "Verify idempotency of PATCH update")
     public void verifyIdempotencyOfUpdates() {
-        // 1️⃣ Prepare the update payload
+        // Prepare the update payload
         Map<String, Object> updates = new HashMap<>();
         Map<String, String> bookingDates = new HashMap<>();
         bookingDates.put("checkin", "2026-12-01");
         bookingDates.put("checkout", "2026-12-05");
         updates.put("bookingdates", bookingDates);
 
-        // 2️⃣ First PATCH
+        // First PATCH
         Response firstResponse = bookingAPI.partialUpdateBooking(createdBookingId, updates);
         Assert.assertEquals(firstResponse.getStatusCode(), APIConstants.HTTP_SUCCESS);
 

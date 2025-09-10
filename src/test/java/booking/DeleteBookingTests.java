@@ -9,9 +9,11 @@ public class DeleteBookingTests extends  BaseTest{
 
     @Test(description="Check if you can delete existing booking details")
     public void checkDeleteExistingBooking(){
+        //delete the existing booking which is created by the createBooking() in base tests
         Response response = bookingAPI.deleteBooking(createdBookingId);
         Assert.assertEquals(response.statusCode(), APIConstants.HTTP_CREATED);
 
+        //check after deletion user is not able to fetch the booking details
         response = bookingAPI.getBookingById(createdBookingId);
         Assert.assertEquals(response.statusCode(),APIConstants.HTTP_NOT_FOUND);
     }

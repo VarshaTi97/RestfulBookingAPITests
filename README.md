@@ -1,7 +1,7 @@
 ## Booking API Automated Tests ##
 
 This is a maven project repository which contains the test scripts, page objects, and test data for testing of Booking API. It is a `hybrid driven framework` which incorporates data driven approach.
-Project is hosted on github and using github action to trigger the test in docker contanerised environment and proced the results.
+Project is hosted on Github and using Github action to trigger the test in docker containerised environment and proced the results.
 Target API DOC URL is: https://restful-booker.herokuapp.com/apidoc/index.html#api-Booking-GetBookings
 
 ### Repo organization ###
@@ -70,7 +70,7 @@ Following are the list of libraries used while building the framework:
    ```
    | Library Name      | Version  | Description                                                                                                 |
    | :---------------- | :------- | :-----------------------------------------------------------------------------------------------------------|
-   | java              | 17.0.2   | Programming language                                                                                        |
+   | java              | 23.0.1   | Programming language                                                                                        |
    | testng            | 7.11.0   | Testing framework which supports test configured by annotations, data-driven testing, parametric tests, etc.|
    | rest assurred     | 5.5.6    | It is a API automation library.                                                                             |
    | allure reports    | 2.29.1   | to generate readable html reports                                                                           |
@@ -82,6 +82,12 @@ Following are the list of libraries used while building the framework:
 
 1.Install allure in order to see the html report. On Mac
     - `brew install allure`
+
+### Data Source used in framework ###
+
+In this framework I have used Excel sheet and property files as data sources. These 2 testcases reading data from excel sheet.
+1. checkBookingBySingleField
+2. checkBookingByMultipleFields
 
 ### Execution Steps ###
 
@@ -95,8 +101,10 @@ Following are the list of libraries used while building the framework:
 ### Execution Report ###
 
 - Extract `allure-reports.zip` folder, then open terminal there and run command `allure serve allure-results`. This will give http url with result.
-
 - Report files can be opened in any web browser.
+
+### Problems###
+Issues identified during testing are list under `Problems Identified During testsing` path
 
 ### Author ###
 

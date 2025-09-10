@@ -64,6 +64,7 @@ public class ExcelUtils {
         return data;
     }
 
+    //Reads cell values after doing proper format conversions
     public Object getCellValue(Cell cell) {
         switch (cell.getCellType()) {
             case STRING:
@@ -88,6 +89,7 @@ public class ExcelUtils {
         }
     }
 
+    //Get list of booking and details form excel sheets
     public List<BookingDetails> getBookingDetailsFromExcel(String sheetName){
         List<Map<String, Object>> rows = readBookingData(sheetName);
         List<BookingDetails> bookings = new ArrayList<>();

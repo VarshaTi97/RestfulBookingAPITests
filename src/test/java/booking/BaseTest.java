@@ -23,6 +23,7 @@ public class BaseTest {
     protected String token;
     protected Integer createdBookingId;
 
+    //Check status of the API before starting the execution
     @BeforeSuite(alwaysRun = true)
     public void checkAPIStatus(){
         Response response = APIUtils.get(APIConstants.PING, APIUtils.getRequestSpec());
@@ -32,10 +33,13 @@ public class BaseTest {
         System.out.println("API is live , proceeding with tests!");
     }
 
+    //Generates token
     public void getToken(){
-        token = AuthenticationTokenUtil.getAuthToken("admin","password123" );
+        token = AuthenticationTokenUtil.getAuthToken(PropertyFileUtil.get("username"),PropertyFileUtil.get("password" ));
 
     }
+
+    // Instantiating the page class and token to be used for other method calls
     @BeforeClass(alwaysRun = true)
     public void setup(){
         //Instantiated pages layer
@@ -43,6 +47,7 @@ public class BaseTest {
         bookingAPI = new BookingAPI(token);
    }
 
+   //Creating a single test booking by reading details from property file to be used in the tests
    @BeforeMethod
    public void createBooking(){
        BookingDates bookingDates = new BookingDates(
@@ -65,6 +70,7 @@ public class BaseTest {
        createdBookingId = response.jsonPath().getInt("bookingid");
    }
 
+   //Reads booking details from excel sheet to be used by test
     @DataProvider(name="excelBookingDetailsData")
     public Object[][] getBookingsFromExcelSheet(){
         ExcelUtils excelUtils = new ExcelUtils();
@@ -77,6 +83,7 @@ public class BaseTest {
         return data;
     }
 
+    //Cleans up the booking after test execution is complete
     @AfterMethod
     public void cleanupTestBookings(){
         if (createdBookingId != null) {

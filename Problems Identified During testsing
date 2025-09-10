@@ -1,0 +1,16 @@
+1. Filtering the get booking id with non-existent attributes also returns 200 ok status code.
+e.g. : https://restful-booker.herokuapp.com/booking?exists=varsha
+
+2. There is no strict data type checks getting performed for fields like date, additional needs, total price, deposit paid. All invalid payloads are also returning 200 OK
+eg:
+{
+    "firstname" : "Varsha",
+    "lastname" : "Smith",
+    "totalprice" : true,
+    "depositpaid" : true,
+    "bookingdates" : {
+        "checkin" : "202011",
+        "checkout" : "202010"
+    },
+    "additionalneeds" : 123
+    }
