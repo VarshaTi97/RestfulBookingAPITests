@@ -32,12 +32,14 @@ jobs:
       - name: Build Docker image
         run: docker build -t restful-booking-tests .
 
-      - name: Run tests in Docker (with allure-results mounted)
-        run: |
-          mkdir -p allure-results
-          docker run --rm \
-            -v ${{ github.workspace }}/allure-results:/app/target/allure-results \
-            restful-booking-tests
+      - name: Run tests in Docker (keep container)
+        run: docker run --name restful-tests-container restful-booking-tests || true
+
+      - name: Copy Allure results
+        run: docker cp restful-tests-container:/app/allure-results ./allure-results || true
+
+      - name: Cleanup container
+        run: docker rm restful-tests-container || true
 
       - name: Upload allure-results as artifact
         uses: actions/upload-artifact@v4
