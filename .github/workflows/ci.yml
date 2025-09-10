@@ -38,6 +38,9 @@ jobs:
       - name: Copy Allure results
         run: docker cp restful-tests-container:/app/allure-results ./allure-results || true
 
+      - name: Copy Surefire report
+        run: docker cp restful-tests-container:/app/target/surefire-reports ./surefire-reports || true
+
       - name: Cleanup container
         run: docker rm restful-tests-container || true
 
@@ -46,3 +49,10 @@ jobs:
         with:
           name: allure-results
           path: allure-results
+
+      - name: Upload Surefire report as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: surefire-report
+          path: surefire-reports
+

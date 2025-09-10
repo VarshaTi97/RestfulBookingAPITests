@@ -81,7 +81,7 @@ Following are the list of libraries used while building the framework:
 ### Prerequisites ###
 
 1.Install allure in order to see the html report. On Mac
-    - `brew install allure`
+- `brew install allure`
 
 ### Data Source used in framework ###
 
@@ -91,12 +91,12 @@ In this framework I have used Excel sheet and property files as data sources. Th
 
 ### Execution Steps ###
 
-1. As soon as code is pushed or MR is created for the main branch Github actions gets triggered. To view the latest report on main branch you can go to the `Actions` tab at the top
-2. From all workflow select the first one as it will already have the run from latest commit.
-3. Click on `build-test`
-4. Click on `Upload allure-results as artifact` step, in there you will see the bottom `Artifact download URL`
-5. This will download the `allure-reports.zip`.
-
+1. Go to Github project url
+2. Click on `Actions` tab at the top of the page
+3. On the left side menu you will see `All workflows` under that click on `CI - RestfulBookingAPITests`
+4. On the right side pane you will see button `Run workflow`, click on that button and click `Run workflow`
+5. Refresh the page and you will see new workflow running, click on that and wait for it to finish
+6. Once job is finished you will see artifacts section(if not visible refresh), click on download button there.
 
 ### Execution Report ###
 
