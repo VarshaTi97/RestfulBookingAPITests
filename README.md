@@ -96,12 +96,19 @@ In this framework I have used Excel sheet and property files as data sources. Th
 3. On the left side menu you will see `All workflows` under that click on `CI - RestfulBookingAPITests`
 4. On the right side pane you will see button `Run workflow`, click on that button and click `Run workflow`
 5. Refresh the page and you will see new workflow running, click on that and wait for it to finish
-6. Once job is finished you will see artifacts section(if not visible refresh), click on download button there.
+6. Once job is finished you will see artifacts section(if not visible refresh)
+7. 2 Types of reports are there in the artifacts download them
 
 ### Execution Report ###
+You can view Allure report or surefire plugin report. To view allure report
 
 - Extract `allure-reports.zip` folder, then open terminal there and run command `allure serve allure-results`. This will give http url with result.
 - Report files can be opened in any web browser.
+
+To view surefire report
+
+- Extract `surefire-report.zip` folder
+- Open `emailable-report.html` , this is the report file about which test-cases got executed and time taken.
 
 ### Problems ###
 Issues identified during testing are list under `Problems Identified During testsing` path
